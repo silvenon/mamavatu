@@ -78,6 +78,7 @@ class App extends Component {
           </label>
           <input
             type='range'
+            disabled={this.state.playing}
             min='0.5' max='1' step='0.25'
             value={this.state.rate}
             onChange={this._handleChangeRate}
