@@ -110,3 +110,9 @@ export const LYRICS = [
   { octave: 2, pos: 22.655, swara: GA },
   { octave: 2, pos: 22.829, swara: SA },
 ];
+
+export const RATE_NAME = {
+  0.5: 'Sporo',
+  0.75: 'Polako',
+  1: 'Normalno',
+};

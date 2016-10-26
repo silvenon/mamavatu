@@ -1,21 +1,14 @@
 import React, { Component } from 'react';
 import { Howl } from 'howler';
-import classNames from 'classnames';
-import setPTimeout from 'pauseable-timeout';
-import { SWARAS, LYRICS } from './constants';
+import Swaras from './Swaras';
+import Actions from './Actions';
+import { RATE_NAME } from './constants';
 import './App.css';
-
-const RATE_NAME = {
-  0.5: 'Sporo',
-  0.75: 'Lagano',
-  1: 'Normalno',
-};
 
 class App extends Component {
   state = {
     playing: false,
     paused: false,
-    current: { pos: 0 },
     rate: 0.5,
   };
 
@@ -33,71 +26,51 @@ class App extends Component {
     this.setState({ rate });
   };
 
+  _handleSwarasStart = timeout => {
+    this._timeout = timeout;
+  };
+
+  _handleSwarasEnd = () => {
+    this._song.once('end', this._stop);
+  };
+
   _play = () => {
-    this.setState({ playing: true });
     this._song.play();
-    this._updating();
+    this.setState({ playing: true });
   };
 
   _pause = () => {
     this._song.pause();
-    this._timeout.pause();
     this.setState({ paused: true });
   };
 
   _resume = () => {
     this._song.play();
-    this._timeout.resume();
     this.setState({ paused: false });
   };
 
   _stop = () => {
     this._song.stop();
-    this._timeout.abort();
     this.setState({
       playing: false,
       paused: false,
-      current: { pos: 0 },
     });
   };
 
-  _updating = () => {
-    const nextIndex = LYRICS.indexOf(this.state.current) + 1;
-    const next = LYRICS[nextIndex];
-    this._timeout = setPTimeout(() => {
-      this.setState({ current: next });
-      if (nextIndex >= LYRICS.length - 1) {
-        this._stop();
-      } else {
-        this._updating();
-      }
-    }, (next.pos - this.state.current.pos) * (1000 / this.state.rate));
-  };
-
   render() {
-    const { current } = this.state;
-
     return (
       <div className='App'>
         <div className='App-header'>
           <h1>{'Mamavatu'}</h1>
         </div>
-        <ol className='App-swaras'>
-          {[0, 1, 2].map(octave => SWARAS.map((swara, index) => {
-            const isCurrent =
-              current.octave === octave &&
-              current.swara === swara;
 
-            return (
-              <li
-                key={index * (octave + 1)}
-                className={classNames('App-swara', isCurrent && 'active')}
-              >
-                {swara}
-              </li>
-            );
-          }))}
-        </ol>
+        <Swaras
+          playing={this.state.playing}
+          paused={this.state.paused}
+          rate={this.state.rate}
+          onStart={this._handleSwarasStart}
+          onEnd={this._handleSwarasEnd}
+        />
 
         <div className='App-rate'>
           <label>
@@ -111,36 +84,14 @@ class App extends Component {
           />
         </div>
 
-        <div className="App-actions">
-          {!this.state.playing && (
-            <button type='button' onClick={this._play} className='App-action'>
-              <svg title="Počni" width={50} height={50}>
-                <use xlinkHref={`${process.env.PUBLIC_URL}/icons.svg#play`} />
-              </svg>
-            </button>
-          )}
-          {this.state.paused && (
-            <button type='button' onClick={this._resume} className='App-action'>
-              <svg title="Počni" width={50} height={50}>
-                <use xlinkHref={`${process.env.PUBLIC_URL}/icons.svg#play`} />
-              </svg>
-            </button>
-          )}
-          {this.state.playing && !this.state.paused && (
-            <button type='button' onClick={this._pause} className='App-action'>
-              <svg title="Pauziraj" width={50} height={50}>
-                <use xlinkHref={`${process.env.PUBLIC_URL}/icons.svg#pause`} />
-              </svg>
-            </button>
-          )}
-          {this.state.playing && (
-            <button type='button' onClick={this._stop} className='App-action'>
-              <svg title="Zaustavi" width={50} height={50}>
-                <use xlinkHref={`${process.env.PUBLIC_URL}/icons.svg#stop`} />
-              </svg>
-            </button>
-          )}
-        </div>
+        <Actions
+          playing={this.state.playing}
+          paused={this.state.paused}
+          onPlay={this._play}
+          onPause={this._pause}
+          onResume={this._resume}
+          onStop={this._stop}
+        />
       </div>
     );
   }
