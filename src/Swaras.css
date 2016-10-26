@@ -10,7 +10,15 @@
   transition: 0.1s all ease;
 }
 
+.Swaras.faster-transition .Swaras-item {
+  transition: none;
+}
+
 .Swaras-item.active {
   transform: translateY(-25%) scale(1.75);
   color: #D24858;
+}
+
+.Swaras.faster-transition .Swaras-item.active {
+  transform: translateY(-15%) scale(1.5);
 }

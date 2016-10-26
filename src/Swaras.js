@@ -44,7 +44,7 @@ class Swaras extends Component {
     const { current } = this.state;
 
     return (
-      <ol className='Swaras'>
+      <ol className={classNames('Swaras', this.props.rate > 0.5 && 'faster-transition')}>
         {[0, 1, 2].map(octave => SWARAS.map((swara, index) => {
           const isCurrent =
             current.octave === octave &&
