@@ -27,7 +27,6 @@ class Swaras extends Component {
   _updating = () => {
     const nextIndex = LYRICS.indexOf(this.state.current) + 1;
     const next = LYRICS[nextIndex];
-    const ahead = 0;
     this._timeout = setPTimeout(() => {
       this.setState({ current: next });
       if (nextIndex >= LYRICS.length - 1) {
@@ -38,7 +37,7 @@ class Swaras extends Component {
       } else {
         this._updating();
       }
-    }, (next.pos - this.state.current.pos - ahead) * (1000 / this.props.rate));
+    }, (next.pos - this.state.current.pos) * (1000 / this.props.rate));
   };
 
   render() {
