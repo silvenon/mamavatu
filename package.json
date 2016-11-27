@@ -3,6 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "devDependencies": {
+    "list": "^0.8.2",
+    "now": "^0.26.0",
     "react-scripts": "0.7.0"
   },
   "dependencies": {
@@ -15,8 +17,10 @@
   },
   "scripts": {
     "start": "react-scripts start",
+    "now-start": "list build/",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "deploy": "now"
   }
 }
